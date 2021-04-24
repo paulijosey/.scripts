@@ -1,0 +1,14 @@
+#!/bin/sh
+input=$1
+color1=50D0D0
+color2=ff1470
+
+[ $input = "on" ] && 	(liquidctl set led1 color fixed $color1 --start-led 1 --maximum-leds 48; liquidctl set led1 color fixed $color2 --start-led 16 --maximum-leds 16)
+[ $input = "off" ] && 	(liquidctl set led1 color off)
+[ $input = "pink" ] && 	(liquidctl set led1 color fixed ff1470 --start-led 1 --maximum-leds 48)
+[ $input = "teal" ] && 	(liquidctl set led1 color fixed 50D0D0 --start-led 1 --maximum-leds 48)
+[ $input = "wave" ] &&	(liquidctl set led1 color color_wave  $color1 $color2 --start-led 1 --maximum-leds 48)
+[ $input = "pulse" ] && (liquidctl set led1 color color_pulse $color1 $color2 --start-led 1 --maximum-leds 48)
+[ $input = "shift" ] && (liquidctl set led1 color color_shift $color1 $color2 --start-led 1 --maximum-leds 48)
+[ $input = "rainbow" ] && (liquidctl set led1 color rainbow --start-led 1 --maximum-leds 48)
+[ $input = "rainbow2" ] && (liquidctl set led1 color rainbow2 --start-led 1 --maximum-leds 48)

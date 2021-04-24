@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# read current Keyboard layout
+kb_layout=$(setxkbmap -query | grep "layout:" | awk -F 'layout: *' '$0=$NF')
+
+# switch between german and us layout
+[ "$kb_layout" = 'eu' ] && ( setxkbmap de; notify-send "switched to DE keyboard layout" ) || ( setxkbmap eu; notify-send "switched to EU keyboard layout" )
