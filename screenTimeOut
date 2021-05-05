@@ -1,0 +1,65 @@
+#!/bin/sh
+set -e
+function main
+{
+	# Get command line options
+	OPTERR=1
+	local status=1					# default status on
+
+	while getopts ":hoO" opt; do
+	    case $opt in
+	        h)
+	            	print_help
+	            	exit 0
+	            	;;
+	        o)
+			# set screensaver to on
+	            	status=1
+	            	;;
+	        O)
+			# set screensaver to off
+	            	status=0
+	            	;;
+	        *)
+	            	exit 42 "Illegal parameter!"
+	            	;;
+	    esac
+	done
+
+	if [ "$status" = 1 ]
+	then
+		echo -e 'setting screensaver to ON'
+		notify-send "screensaver ON"
+		xset +dpms 	# Enables Energy Star features
+		xset s on 	# Enables screen saver
+	else
+		echo -e 'setting screensaver to OFF'
+		notify-send "screensaver OFF"
+		xset -dpms 	# Disables Energy Star features
+		xset s off 	# Disables screen saver
+	fi
+	exit 0
+}
+
+function print_help
+{
+	echo
+	echo "This script sets the screensaver settings of your XServer."
+	echo
+	echo "Usage:"
+	echo
+	echo "	screenTimeOut <options>"
+	echo
+	echo "Where:"
+	echo
+	echo "	-h	Display help and exit"
+	echo "	-o	set to ON"
+	echo "	-O 	set to OFF"
+	echo
+}
+
+# Run script
+main "$@"
+
+# We should not end up here
+exit 42
