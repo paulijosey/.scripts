@@ -1,12 +1,12 @@
 #!/bin/sh
 set -e
+
 function main
 {
 	# Get command line options
-	OPTERR=1
 	local status=1					# default status on
-
-	while getopts ":hoO" opt; do
+	local toggle=0					# toggle var
+	while getopts ":hoOt" opt; do
 	    case $opt in
 	        h)
 	            	print_help
@@ -20,11 +20,31 @@ function main
 			# set screensaver to off
 	            	status=0
 	            	;;
+		t)
+			# toggle status
+			toggle=1
+			;;
 	        *)
 	            	exit 42 "Illegal parameter!"
 	            	;;
 	    esac
 	done
+
+	if [ "$toggle" = 1 ]
+	then
+		# check for xset status (-q option)
+		xset_status=$(xset -q | grep 'DPMS is ')
+		echo "$xset_status"
+		comp='DPMS is Disabled'
+		if [[ $xset_status == '  DPMS is Disabled' ]]
+		then
+			# turn screensaver on
+			status=1
+		else
+			# turn screensaver off
+			status=0
+		fi
+	fi
 
 	if [ "$status" = 1 ]
 	then
@@ -55,6 +75,7 @@ function print_help
 	echo "	-h	Display help and exit"
 	echo "	-o	set to ON"
 	echo "	-O 	set to OFF"
+	echo "	-t	toggle screentimeout on/off"
 	echo
 }
 
