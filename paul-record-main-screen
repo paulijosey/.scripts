@@ -1,0 +1,55 @@
+#!/bin/sh
+set -e
+function main
+{
+	# Get command line options
+	OPTERR=1
+	local file_name='screen'			# image must be renamed for install script on sensor to work
+	local experimental=0				# use experimental software/programs (e.g. rsync)
+
+	while getopts ":ho:" opt; do
+	    case $opt in
+	        h)
+	            	print_help
+	            	exit 0
+	            	;;
+	        o)
+	        	file_name=$OPTARG
+	            	;;
+	        *)
+	            	exit_fail "Illegal parameter!"
+	            	;;
+	    esac
+	done
+
+	echo -e 'recording to file        : ' $file_name
+	record
+	exit 0
+
+}
+
+function record {
+	ffmpeg -f x11grab -video_size 1920x1080 -framerate 25 -i $DISPLAY -c:v ffvhuff $file_name.mkv
+}
+
+function print_help
+{
+	echo
+	echo "This script uses ffmpeg to record the main screen"
+	echo
+	echo "Usage:"
+	echo
+	echo "	$(basename "$0") [-h]  |  -o <file_name>"
+	echo
+	echo "Where:"
+	echo
+	echo "	-h	Display help and exit"
+	echo "	-o	file name to save video to"
+	echo
+}
+
+# Run script
+main "$@"
+
+# We should not end up here
+exit 42
