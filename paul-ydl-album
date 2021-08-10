@@ -1,0 +1,6 @@
+#!/bin/sh
+# download music from youtube, soundcloud, etc
+
+link=$1
+
+youtube-dl -i --extract-audio --audio-format best --add-metadata -o '~/Music/%(artist)s/%(album)s/%(playlist_index)s-%(track)s.%(ext)s' $link
