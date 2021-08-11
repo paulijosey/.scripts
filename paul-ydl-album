@@ -1,6 +1,63 @@
 #!/bin/sh
 # download music from youtube, soundcloud, etc
 
-link=$1
+set -e
+function main
+{
+	# Get command line options
+	OPTERR=1
+	local save_location='~/Music'			# default Music location
 
-youtube-dl -i --extract-audio --audio-format best --add-metadata -o '~/Music/%(artist)s/%(album)s/%(playlist_index)s-%(track)s.%(ext)s' $link
+	while getopts ":hl:d:" opt; do
+	    case $opt in
+	        h)
+	            	print_help
+	            	exit 0
+	            	;;
+		l)
+			link=$OPTARG
+			;;
+	        d)
+	        	save_location=$OPTARG
+	            	;;
+	        *)
+	            	exit_fail "Illegal parameter!"
+	            	;;
+	    esac
+	done
+
+	echo -e 'downloading file to	: ' $save_location
+	download
+	exit 0
+
+}
+
+function download {
+	youtube-dl -i --extract-audio --audio-format best --add-metadata -o $save_location'/%(artist)s/%(album)s/%(playlist_index)s-%(track)s.%(ext)s' $link
+}
+
+function print_help
+{
+	echo
+	echo "This script uses youtube-dl to download audio files from youtube/soundloud/bandcamp ... "
+	echo "It will also save them automatically at a given location on following "
+	echo "format: /given_dest/artist/album/track"
+	echo
+	echo "Usage:"
+	echo
+	echo "	$(basename "$0") [-h]  |  -l <url link to video/audio> [ -d <save location>"
+	echo
+	echo "Where:"
+	echo
+	echo "	-h	Display help and exit"
+	echo "	-l 	url link"
+	echo " 	-d	save location (default is /Music)"
+	echo
+}
+
+# Run script
+main "$@"
+
+# We should not end up here
+exit 42
+link=$1
