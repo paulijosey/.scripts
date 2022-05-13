@@ -7,8 +7,10 @@ function main
 	# Get command line options
 	OPTERR=1
 	local save_location='~/Music'			# default Music location
+	local artist=""
+	local album=""
 
-	while getopts ":hl:d:" opt; do
+	while getopts ":hl:a:A:d:" opt; do
 	    case $opt in
 	        h)
 	            	print_help
@@ -16,6 +18,12 @@ function main
 	            	;;
 		l)
 			link=$OPTARG
+			;;
+		a)
+			album=$OPTARG
+			;;
+		A)
+			artist=$OPTARG
 			;;
 	        d)
 	        	save_location=$OPTARG
@@ -33,7 +41,19 @@ function main
 }
 
 function download {
-	youtube-dl -i --extract-audio --audio-format best --add-metadata -o $save_location'/%(artist)s/%(album)s/%(playlist_index)s-%(track)s.%(ext)s' $link
+	if [ -n "$artist" ] && [ -z "$album" ]
+	then
+		youtube-dl -i --extract-audio --audio-format best --add-metadata -o $save_location/"$artist/%(album)s/%(playlist_index)s-%(track)s.%(ext)s" $link
+	elif [ -n "$album" ] && [ -z "$artist" ]
+	then
+		youtube-dl -i --extract-audio --audio-format best --add-metadata -o $save_location"/%(artist)s/$album/%(playlist_index)s-%(track)s.%(ext)s" $link
+	elif [ -n "$album" ] && [ -n "$artist" ]
+	then
+		location=$save_location/$artist/$album
+		youtube-dl -i --extract-audio --audio-format best --add-metadata -o $save_location"/$artist/$album/%(playlist_index)s-%(track)s.%(ext)s" $link
+	else
+		youtube-dl -i --extract-audio --audio-format best --add-metadata -o $save_location'/%(artist)s/%(album)s/%(playlist_index)s-%(track)s.%(ext)s' $link
+	fi
 }
 
 function print_help
