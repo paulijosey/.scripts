@@ -4,10 +4,11 @@ function main
 {
 	# Get command line options
 	OPTERR=1
-	local file_name='screen'			# image must be renamed for install script on sensor to work
-	local experimental=0				# use experimental software/programs (e.g. rsync)
+	local file_name='screen'
+	local resolution=1920x1080
+	local fps=25
 
-	while getopts ":ho:" opt; do
+	while getopts ":ho:r:f:" opt; do
 	    case $opt in
 	        h)
 	            	print_help
@@ -16,20 +17,29 @@ function main
 	        o)
 	        	file_name=$OPTARG
 	            	;;
+		r)
+			resolution=$OPTARG
+			;;
+		f)
+			fps=$OPTARG
+			;;
 	        *)
 	            	exit_fail "Illegal parameter!"
 	            	;;
 	    esac
 	done
 
-	echo -e 'recording to file        : ' $file_name
+	echo -e 'recording to file     	: ' $file_name
+	echo -e 'Resolution	        : ' $resolution
+	echo -e 'FPS   			: ' $fps
+
 	record
 	exit 0
 
 }
 
 function record {
-	ffmpeg -f x11grab -video_size 1920x1080 -framerate 25 -i $DISPLAY -c:v ffvhuff $file_name.mkv
+	ffmpeg -f x11grab -video_size $resolution -framerate $fps -i $DISPLAY -c:v ffvhuff $file_name.mkv
 }
 
 function print_help
