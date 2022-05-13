@@ -1,0 +1,63 @@
+#!/bin/sh
+set -e
+function main
+{
+	# Get command line options
+	OPTERR=1
+	local deviceId=
+	local envVar=ANDROID_SERIAL
+
+	while getopts ":h" opt; do
+	    case $opt in
+	        h)
+	            	print_help
+	            	exit 0
+	            	;;
+	        *)
+	            	exit_fail "Illegal parameter!"
+	            	;;
+	    esac
+	done
+
+	getDeviceName
+	echo -e 'devide ID   			: ' $deviceId
+
+	startDroidcam
+
+	exit 0
+
+}
+
+function getDeviceName
+{
+	 deviceId=$( adb devices | grep -w "device" | awk '{ print $1 }' )
+}
+
+function startDroidcam
+{
+	export $envVar=$deviceId # probably not needed
+	env ANDROID_SERIAL=$deviceId droidcam
+}
+
+function print_help
+{
+	echo
+	echo "This script sets the environmental variable "
+	echo "$envVar to fix the adb error in "
+	echo "droidcam and starts the program."
+	echo
+	echo "Usage:"
+	echo
+	echo "	$(basename "$0") [-h] "
+	echo
+	echo "Where:"
+	echo
+	echo "	-h	Display help and exit"
+	echo
+}
+
+# Run script
+main "$@"
+
+# We should not end up here
+exit 42
