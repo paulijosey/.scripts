@@ -1,0 +1,5 @@
+#!/bin/sh
+
+pkg_group=$1
+
+pacman -Q | grep $pkg_group | awk '{print $1}' > pkg_list.txt

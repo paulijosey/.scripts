@@ -1,0 +1,10 @@
+#!/bin/sh
+
+file_list=$1
+
+while read line;
+do
+	echo "removing $line"
+	pacman -Rdd --noconfirm $line
+
+done < $file_list
