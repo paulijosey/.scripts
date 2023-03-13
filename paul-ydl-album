@@ -74,6 +74,8 @@ function print_help
 	echo "	-A 	Artist"
 	echo "	-a 	album"
 	echo " 	-d	save location (default is /Music)"
+	echo "	-a 	(optional) Album name"
+	echo "	-A 	(optional) Artist name"
 	echo
 }
 
