@@ -1,0 +1,62 @@
+#!/bin/sh
+set -e
+function main
+{
+	# Get command line options
+	OPTERR=1
+	local INPUT_FILE='test.pdf'
+	while getopts ":hi:" opt; do
+	    case $opt in
+	        h)
+	            	print_help
+	            	exit 0
+	            	;;
+	        i)
+	            	INPUT_FILE=$OPTARG
+	            	;;
+	        *)
+	            	exit_fail "Illegal parameter!"
+	            	;;
+	    esac
+	done
+	to_gray
+	exit 0
+}
+
+function to_gray
+{
+	OUTPUT_FILE=$(echo "$INPUT_FILE" | cut -f 1 -d '.')
+	OUTPUT_FILE="${OUTPUT_FILE}_gray.pdf"
+	gs \
+	 -sOutputFile=$OUTPUT_FILE\
+	 -sDEVICE=pdfwrite \
+	 -sColorConversionStrategy=Gray \
+	 -dProcessColorModel=/DeviceGray \
+	 -dCompatibilityLevel=1.4 \
+	 -dNOPAUSE \
+	 -dBATCH \
+	$INPUT_FILE
+}
+
+function print_help
+{
+	echo
+	echo "This script sets the environmental variable "
+	echo "$envVar to fix the adb error in "
+	echo "droidcam and starts the program."
+	echo
+	echo "Usage:"
+	echo
+	echo "	$(basename "$0") [-h] "
+	echo
+	echo "Where:"
+	echo
+	echo "	-h	Display help and exit"
+	echo
+}
+
+# Run script
+main "$@"
+
+# We should not end up here
+exit 42
