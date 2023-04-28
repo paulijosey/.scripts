@@ -1,0 +1,4 @@
+#!/bin/sh
+
+setxkbmap eu; notify-send "switched to EU keyboard layout"
+remaps
