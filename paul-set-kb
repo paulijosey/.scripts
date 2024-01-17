@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# switch between german and us layout
+setxkbmap eu; notify-send "switched to EU keyboard layout"

@@ -1,0 +1,3 @@
+#!/bin/bash
+
+find ./ -name "*.drawio" -exec rm -f {}.svg \; -exec /usr/bin/draw.io --crop -x -f svg -o {}.svg {} \;
