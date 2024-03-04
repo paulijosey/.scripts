@@ -1,0 +1,3 @@
+#!/bin/bash
+
+find ./ -name "*.drawio" -exec rm -f {}.png \; -exec /usr/bin/draw.io --crop -x -f png -o {}.png {} \;
